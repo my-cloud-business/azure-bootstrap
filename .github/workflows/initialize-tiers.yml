@@ -21,8 +21,7 @@ jobs:
         env:
           rg_name: gh-groups-${{ env.region }}-tf
         run: |
-          az group exists --name ${{ env.rg_name }}
-          if [[ ! `az group exists --name ${{ env.rg_name }}` ]]; then 
+          if [[ `az group exists --name ${{ env.rg_name }}` == 'false' ]]; then 
             az group create --name ${{ env.rg_name }}-tf --location ${{ env.region }}
           fi
 
