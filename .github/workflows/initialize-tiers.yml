@@ -1,0 +1,30 @@
+on:
+  workflow_dispatch:    
+
+jobs:
+  tier0-westeurope-nonp:
+    runs-on: ubuntu-latest
+
+    env:
+      region: westeurope
+
+    environment:
+      name: ${{ env.region }}
+
+    steps:
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
+
+      - name: create resource group        
+        env:
+          rg_name: gh-groups-${{ env.region }}-tf
+        run: |
+          if [[ ! `az group exists --name ${{ env.rg_name }}` ]]; then 
+            az group create --name ${{ env.rg_name }}-tf --location ${{ env.region }}
+          fi
+
+      
+
+
